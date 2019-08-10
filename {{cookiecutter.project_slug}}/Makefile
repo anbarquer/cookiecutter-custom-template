@@ -86,7 +86,7 @@ docker-run: ## Run the { cookiecutter.project_slug } Docker image
 	docker run -it ${PACKAGE_NAME} /bin/bash
 
 install-requirements: ## Install { cookiecutter.project_slug } dependencies
-	${PYTHON} -m venv ${PACKAGE_NAME}; \
+	${PYTHON} -m venv .; \
 	source bin/activate; \
 	${PIP} install --upgrade pip; \
 	${PIP} install -r ${REQUIREMENTS}; \
