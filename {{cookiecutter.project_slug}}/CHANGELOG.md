@@ -1,0 +1,3 @@
+# Changelog
+
+v{ cookiecutter.version}
