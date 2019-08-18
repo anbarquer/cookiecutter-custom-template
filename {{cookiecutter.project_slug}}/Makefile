@@ -19,10 +19,10 @@ define PRINT_HELP_PYSCRIPT
 import re, sys
 
 for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
+	match = re.match(r'^([a-zA-Z0-9_-]+):.*?## (.*)$$', line)
 	if match:
 		target, help = match.groups()
-		print("* %-30s %s:" % (target, help))
+		print("* %-30s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
 
@@ -54,7 +54,7 @@ clean-test: ## Remove test and coverage artifacts
 lint: ## Check style with flake8
 	${LINTER} {{ cookiecutter.project_slug }} tests
 
-test: ## run tests quickly with the default Python
+test: ## Run tests quickly with the default Python
 	{%- if cookiecutter.use_pytest == 'y' %}
 		${TEST} ${PACKAGE_NAME}/tests
 	{%- else %}
@@ -79,13 +79,13 @@ coverage-report: ## Check code coverage quickly with the default Python and gene
 		${COVERAGE} html; \
 		$(BROWSER) htmlcov/index.html; \
 
-docker-build: ## Build the { cookiecutter.project_slug } Docker image
+docker-build: ## Build Docker image
 	docker build -t ${PACKAGE_NAME} .
 
-docker-run: ## Run the { cookiecutter.project_slug } Docker image
+docker-run: ## Run Docker image
 	docker run -it ${PACKAGE_NAME} /bin/bash
 
-install-requirements: ## Install { cookiecutter.project_slug } dependencies
+install-requirements: ## Install  dependencies
 	${PYTHON} -m venv .; \
 	source bin/activate; \
 	${PIP} install --upgrade pip; \
