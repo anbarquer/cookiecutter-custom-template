@@ -57,7 +57,7 @@ The commands will log all the messages in the standard output (console) and in a
 This package was highly inspired in **Cookiecutter** project template.
 
 * [Cookiecutter](https://github.com/audreyr/cookiecutter)
-* **Antonio Diego Barquero Cuadrado** - [Send mail](mailto:anbarquer@gmail.com)
+* **{{cookiecutter.full_name}}** - [Send mail](mailto:{{cookiecutter.email}})
 
 ## License
 

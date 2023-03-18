@@ -1,5 +1,3 @@
-include settings.mk
-
 .DEFAULT_GOAL := help
 PYTHON := python3
 
