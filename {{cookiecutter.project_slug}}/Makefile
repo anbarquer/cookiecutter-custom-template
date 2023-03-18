@@ -1,6 +1,4 @@
-include settings.mk
-
-.PHONY: clean clean-test clean-pyc clean-build help
+.PHONY: clean clean-test clean-pyc clean-build help lint coverage requirements requirements-dev docker-build docker-run
 .DEFAULT_GOAL := help
 
 define BROWSER_PYSCRIPT
@@ -27,9 +25,13 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
+PYTHON=python
+DOCKER_COMPOSE := docker compose
+DOCKER := docker
+SHELL := /bin/bash
 
 help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 clean: clean-build clean-pyc clean-test ## Remove all build, test, coverage and Python artifacts
 
@@ -51,42 +53,25 @@ clean-test: ## Remove test and coverage artifacts
 	rm -fr htmlcov/; \
 	rm -fr .pytest_cache; \
 
-lint: ## Check style with flake8
-	${LINTER} {{ cookiecutter.project_slug }} tests
+lint:  ## Analyze code with flake8
+	@$(PYTHON) -m poetry run flake8 app
 
-test: ## Run tests quickly with the default Python
-	{%- if cookiecutter.use_pytest == 'y' %}
-		${TEST} ${PACKAGE_NAME}/tests
-	{%- else %}
-		python setup.py test
-	{%- endif %}
+coverage:  ## Code coverage
+	@$(PYTHON) -m poetry run pytest --cov=app tests/
 
-coverage: ## Check code coverage quickly with the default Python
-	{%- if cookiecutter.use_pytest == 'y' %}
-		${COVERAGE} run --source {{ cookiecutter.project_slug }} -m ${TEST}; \
-	{%- else %}
-		${COVERAGE} run --source {{ cookiecutter.project_slug }} setup.py test; \
-	{%- endif %}
-		${COVERAGE} report -m; \
+test:  ## Run tests with pytest
+	@$(PYTHON) -m poetry run coverage run --source app -m pytest tests
 
-coverage-report: ## Check code coverage quickly with the default Python and generates a HTML report file
-	{%- if cookiecutter.use_pytest == 'y' %}
-		${COVERAGE} run --source {{ cookiecutter.project_slug }} -m ${TEST}; \
-	{%- else %}
-		${COVERAGE} run --source {{ cookiecutter.project_slug }} setup.py test; \
-	{%- endif %}
-		${COVERAGE} report -m; \
-		${COVERAGE} html; \
-		$(BROWSER) htmlcov/index.html; \
+requirements:  ## Install requirements (main only)
+	@$(PYTHON) -m poetry install --no-root --only main
+
+requirements-dev:  ## Install requirements
+	@$(PYTHON) -m poetry install --no-root
 
 docker-build: ## Build Docker image
-	docker build -t ${PACKAGE_NAME} .
+	@(DOCKER) build -t {{cookiecutter.project_slug}} .
 
 docker-run: ## Run Docker image
-	docker run -it ${PACKAGE_NAME} /bin/bash
+	@(DOCKER) run -t {{cookiecutter.project_slug}} -p 5000:5000
 
-install-requirements: ## Install  dependencies
-	${PYTHON} -m venv .; \
-	source bin/activate; \
-	${PIP} install --upgrade pip; \
-	${PIP} install -r ${REQUIREMENTS}; \
+

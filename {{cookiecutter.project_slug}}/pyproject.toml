@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "{{cookiecutter.project_name}}"
+version = "{{cookiecutter.version}}"
+description = "{{cookiecutter.project_short_description}}"
+authors = ["{{cookiecutter.github_username}} <{{cookiecutter.email}}>"]
+readme = "README.md"
+license = "{{cookiecutter.open_source_license}}"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.89.1"
+pydantic = {extras = ["email"], version = "^1.10.4"}
+httpx = "^0.23.3"
+uvicorn = "^0.21.0"
+
+[tool.poetry.group.dev.dependencies]
+bump2version = "^1.0.1"
+flake8 = "^6.0.0"
+pytest = "^7.2.2"
+pytest-asyncio = "^0.20.3"
+pytest-cov = "^4.0.0"
+coverage = "^7.2.1"
+{% if cookiecutter.command_line_interface|lower == 'typer' %}typer = "^0.7.0"{% endif %}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "-p no:warnings"
+
+[tool.coverage.report]
+fail_under = 70
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self\\.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:"
+]
+omit = [
+    "*tests*",
+    "*__init__*",
+]

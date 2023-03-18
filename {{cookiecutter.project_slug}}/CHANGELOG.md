@@ -1,3 +1,3 @@
 # Changelog
 
-v{ cookiecutter.version}
+## v{{ cookiecutter.version}}
