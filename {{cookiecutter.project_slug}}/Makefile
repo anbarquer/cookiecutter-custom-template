@@ -69,9 +69,9 @@ requirements-dev:  ## Install requirements
 	@$(PYTHON) -m poetry install --no-root
 
 docker-build: ## Build Docker image
-	@(DOCKER) build -t {{cookiecutter.project_slug}} .
+	@$(DOCKER) build -t {{cookiecutter.project_slug}} .
 
 docker-run: ## Run Docker image
-	@(DOCKER) run -t {{cookiecutter.project_slug}} -p 5000:5000
+	@$(DOCKER) run -p 5000:5000 -t {{cookiecutter.project_slug}}
 
 

@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import uvicorn
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-
 from app.api import health
 from app.api.v1.router import v1_router
 from app.core.config import settings
 from app.core.extensions import logger
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     version='{{cookiecutter.version}}',

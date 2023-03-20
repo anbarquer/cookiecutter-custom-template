@@ -1,7 +1,7 @@
 FROM python:3.11-alpine3.16
 
 ENV PYTHONUNBUFFERED=1 \
-    APP_HOME="{{cookiecutter.project_slug}}" \
+    APP_HOME="/{{cookiecutter.project_slug}}/" \
     PIP_NO_CACHE_DIR="off" \
     PIP_DISABLE_PIP_VERSION_CHECK="on" \
     PIP_DEFAULT_TIMEOUT=100 \

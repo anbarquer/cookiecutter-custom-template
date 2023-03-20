@@ -3,7 +3,7 @@
 import os
 from ast import literal_eval
 from pydantic import BaseSettings, AnyHttpUrl, validator, BaseModel
-from typing import Union, Optional
+from typing import Union
 
 
 class Settings(BaseSettings):

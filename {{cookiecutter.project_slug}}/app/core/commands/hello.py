@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-
+import typer
 from app.core.commands import run_async, logger, measure
-from app.core.config import settings
 
 app = typer.Typer()
 

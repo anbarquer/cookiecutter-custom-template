@@ -2,7 +2,6 @@
 
 import anyio
 import logging
-from app.core.extensions import logger
 from datetime import timedelta
 from functools import wraps
 from timeit import default_timer as timer
