@@ -1,0 +1,64 @@
+version: "3.1"
+
+services:
+{% if cookiecutter.use_celery|lower == 'yes' %}
+  redis:
+    image: redis:7.0-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+{% endif %}
+  api:
+    build:
+      context: ../
+      dockerfile: docker-compose/Dockerfile
+{% if cookiecutter.use_celery|lower == 'yes' %}
+    environment:
+      - REDIS_HOST=redis
+{% endif %}
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+{% if cookiecutter.use_celery|lower == 'yes' %}
+    depends_on:
+      - redis
+    links:
+      - redis:redis
+{% endif %}
+    entrypoint: [ "python3", "-m", "uvicorn", "app.main:app", "--log-level", "debug", "--port", "5000", "--host", "0.0.0.0", "--workers", "1" ]
+
+{% if cookiecutter.use_celery|lower == 'yes' %}
+  worker:
+    restart: unless-stopped
+    build:
+      context: ../
+      dockerfile: docker-compose/Dockerfile
+    links:
+      - redis:redis
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    entrypoint: [ "python3", "-m", "celery", "-A", "app.core.extension:queue", "worker", "--pool", "solo"]
+{% endif %}
+{% if cookiecutter.use_celery|lower == 'yes' %}
+  monitor:
+    restart: unless-stopped
+    build:
+      context: ../
+      dockerfile: docker-compose/Dockerfile
+    links:
+      - redis:redis
+    depends_on:
+      - redis
+      - worker
+    expose:
+      - "5555"
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_HOST=redis
+    entrypoint: [ "python3", "-m", "celery", "-A", "app.core.extension:queue", "flower",  "--address=0.0.0.0" ]
+{% endif %}

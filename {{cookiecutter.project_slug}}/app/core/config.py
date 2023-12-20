@@ -14,6 +14,29 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: list[Union[AnyHttpUrl | str]] = literal_eval(os.environ.get('BACKEND_CORS_ORIGINS', '["*"]'))
     HEALTH_CHECK_ENDPOINT: str = os.environ.get('HEALTH_CHECK_ENDPOINT', '/health-check/')
 
+{% if cookiecutter.use_celery|lower == 'yes' %}
+    # Celery
+    REDIS_HOST: str = os.environ.get(
+        'REDIS_HOST',
+        'redis',
+    )
+    REDIS_PORT: str = os.environ.get(
+        'REDIS_PORT',
+        '6379'
+    )
+    BACKEND_DB: str = os.environ.get('BACKEND_DB', '1')
+    BROKER_DB: str = os.environ.get('BROKER_DB', '1')
+    BROKER_URL: str = os.environ.get(
+        'BROKER_URL',
+        'redis://{host}/{database}'
+    )
+
+    MAX_RETRIES: int = int(os.environ.get('MAX_RETRIES', '5'))
+    TASKS: list[str] = literal_eval(os.environ.get(
+        'TASKS',
+        '[]'
+    ))
+{% endif %}
     @validator(
         'BACKEND_CORS_ORIGINS',
         pre=True
