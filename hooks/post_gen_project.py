@@ -14,6 +14,8 @@ if __name__ == '__main__':
     if 'no' in '{{ cookiecutter.command_line_interface|lower }}':
         cli_file = os.path.join('{{ cookiecutter.project_slug }}', 'manage.py')
         remove_file(cli_file)
+        path = os.path.join(PROJECT_DIRECTORY, '{{ cookiecutter.project_slug }}', 'app', 'core', 'commands')
+        shutil.rmtree(path)
 
     if 'Not open source' == '{{ cookiecutter.open_source_license }}':
         license_file = os.path.join('{{ cookiecutter.project_slug }}', 'LICENSE')

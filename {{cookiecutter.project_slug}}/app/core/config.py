@@ -61,8 +61,8 @@ class LogConfig(BaseModel):
     LOG_LEVEL: str = os.environ.get('LOG_LEVEL', 'DEBUG')
 
     # Logging config
-    version = 1
-    disable_existing_loggers = False
+    version: int = 1
+    disable_existing_loggers: bool = False
     formatters = {
         'default': {
             '()': 'uvicorn.logging.DefaultFormatter',
@@ -84,13 +84,14 @@ class LogConfig(BaseModel):
             'delay': True,
         },
     }
-    loggers = {
+    loggers: dict = {
         settings.PROJECT_NAME: {
             'handlers': [
                 'default',
             ],
             'level': LOG_LEVEL
         },
+{% if cookiecutter.command_line_interface|lower == 'typer' %}
         'cli': {
             'handlers': [
                 'default',
@@ -98,6 +99,7 @@ class LogConfig(BaseModel):
             ],
             'level': LOG_LEVEL
         },
+{% endif %}
     }
 
 
